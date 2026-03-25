@@ -27,10 +27,8 @@ function onMouseLeaveInteractive() {
 }
 
 function animate() {
-  // Lerp ile yumuşak takip
-  const lerpFactor = 0.12
-  currentX += (mouseX - currentX) * lerpFactor
-  currentY += (mouseY - currentY) * lerpFactor
+  currentX = mouseX
+  currentY = mouseY
 
   if (cursorRef.value) {
     cursorRef.value.style.transform = `translate(${currentX}px, ${currentY}px)`

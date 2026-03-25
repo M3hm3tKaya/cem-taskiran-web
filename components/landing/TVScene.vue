@@ -549,6 +549,28 @@ function onWheel(e: WheelEvent) {
   targetProgress = Math.min(1, Math.max(0, targetProgress + e.deltaY * 0.0008))
 }
 
+// ── Touch desteği — swipe ile zoom + perspektif ──
+let touchStartY = 0
+let touchStartX = 0
+
+function onTouchStart(e: TouchEvent) {
+  touchStartY = e.touches[0].clientY
+  touchStartX = e.touches[0].clientX
+}
+
+function onTouchMove(e: TouchEvent) {
+  e.preventDefault()
+  const deltaY = touchStartY - e.touches[0].clientY
+  const deltaX = e.touches[0].clientX
+
+  // Swipe yukarı = zoom in
+  targetProgress = Math.min(1, Math.max(0, targetProgress + deltaY * 0.002))
+  touchStartY = e.touches[0].clientY
+
+  // Touch X pozisyonu ile perspektif
+  targetRotY = ((deltaX / window.innerWidth - 0.5) * 2) * -0.40
+}
+
 // ── Render loop ──
 function animate() {
   animFrame = requestAnimationFrame(animate)
@@ -686,7 +708,8 @@ onMounted(() => {
   animate()
   window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('wheel', onWheel, { passive: false })
-  // 3D click kaldırıldı — switch label tıklaması yeterli
+  window.addEventListener('touchstart', onTouchStart, { passive: true })
+  window.addEventListener('touchmove', onTouchMove, { passive: false })
   updateClock()
   clockInterval = setInterval(updateClock, 1000)
 })
@@ -695,6 +718,8 @@ onUnmounted(() => {
   cancelAnimationFrame(animFrame)
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('wheel', onWheel)
+  window.removeEventListener('touchstart', onTouchStart)
+  window.removeEventListener('touchmove', onTouchMove)
   window.removeEventListener('resize', onResize)
   if (clockInterval) clearInterval(clockInterval)
   renderer?.dispose()

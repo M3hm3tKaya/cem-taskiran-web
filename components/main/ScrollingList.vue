@@ -29,6 +29,17 @@ function onWheel(e: WheelEvent) {
   targetVelocity = Math.min(maxVelocity, targetVelocity + Math.abs(e.deltaY) * 0.04)
 }
 
+// Touch swipe desteği
+let touchLastX = 0
+function onTouchStart(e: TouchEvent) {
+  touchLastX = e.touches[0].clientX
+}
+function onTouchMoveList(e: TouchEvent) {
+  const deltaX = touchLastX - e.touches[0].clientX
+  targetVelocity = Math.min(maxVelocity, targetVelocity + Math.abs(deltaX) * 0.08)
+  touchLastX = e.touches[0].clientX
+}
+
 // ── 3D Perspektif v2 — vanishing point sağda ──
 const perspectiveStyle = ref<Record<string, string>>({})
 const isMobile = useMediaQuery('(max-width: 768px)')
@@ -87,12 +98,16 @@ function animate() {
 
 onMounted(() => {
   window.addEventListener('wheel', onWheel, { passive: true })
+  window.addEventListener('touchstart', onTouchStart, { passive: true })
+  window.addEventListener('touchmove', onTouchMoveList, { passive: true })
   animate()
   gsap.ticker.add(updatePerspective)
 })
 
 onUnmounted(() => {
   window.removeEventListener('wheel', onWheel)
+  window.removeEventListener('touchstart', onTouchStart)
+  window.removeEventListener('touchmove', onTouchMoveList)
   gsap.ticker.remove(updatePerspective)
   if (animationId !== null) cancelAnimationFrame(animationId)
 })

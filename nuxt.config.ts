@@ -60,5 +60,10 @@ export default defineNuxtConfig({
     appManifest: false,
   },
 
+  // Cloudflare Pages deploy
+  nitro: {
+    preset: 'cloudflare-pages',
+  },
+
   devtools: { enabled: false },
 })

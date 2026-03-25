@@ -1,0 +1,41 @@
+// Lenis smooth scroll client-side plugin
+import Lenis from 'lenis'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+// ScrollTrigger'ın burada da register olduğundan emin ol
+gsap.registerPlugin(ScrollTrigger)
+
+export default defineNuxtPlugin(() => {
+  try {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 2,
+    })
+
+    // Lenis ↔ GSAP ScrollTrigger entegrasyonu
+    lenis.on('scroll', ScrollTrigger.update)
+
+    gsap.ticker.add((time: number) => {
+      lenis.raf(time * 1000)
+    })
+    gsap.ticker.lagSmoothing(0)
+
+    // Başlangıçta scroll kilitli (intro sırasında)
+    lenis.stop()
+
+    return {
+      provide: {
+        lenis,
+      },
+    }
+  } catch (e) {
+    console.warn('Lenis initialization failed:', e)
+    return {
+      provide: {
+        lenis: null,
+      },
+    }
+  }
+})

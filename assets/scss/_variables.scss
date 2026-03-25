@@ -1,0 +1,23 @@
+// ── Renkler ──
+$bg-dark: #0E0E10;
+$bg-darker: #101011;
+$text-white: #FFFFFF;
+$text-gray: #888888;
+$accent-cyan: #00D4FF;
+$grid-color: #2A2A2D;
+$grid-color-light: #3A3A3D;
+
+// ── Tipografi ──
+$font-mono: 'IBM Plex Mono', monospace;
+
+// ── Breakpoints ──
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1440px;
+
+// ── Z-index katmanları ──
+$z-intro: 100;
+$z-tv-scene: 50;
+$z-main: 10;
+$z-grid: 1;
+$z-cursor: 1000;

@@ -1,0 +1,41 @@
+// ── Ana stil dosyası ──
+@use 'variables' as *;
+@use 'reset';
+@use 'typography';
+@use 'grid-background';
+@use 'animations';
+
+// ── Genel stiller ──
+html {
+  background-color: $bg-dark;
+  scroll-behavior: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Edge
+  }
+}
+
+body {
+  background-color: $bg-dark;
+  color: $text-white;
+  overflow-x: hidden;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+#__nuxt {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+// ── Seçim renkleri ──
+::selection {
+  background-color: $accent-cyan;
+  color: $bg-dark;
+}

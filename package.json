@@ -1,0 +1,27 @@
+{
+  "name": "hle-clone",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^3.17.2",
+    "vue": "latest",
+    "vue-router": "latest",
+    "three": "latest",
+    "gsap": "latest",
+    "lenis": "latest",
+    "@vueuse/core": "latest"
+  },
+  "devDependencies": {
+    "@types/three": "latest",
+    "@nuxt/image": "latest",
+    "sass": "latest",
+    "typescript": "latest"
+  }
+}

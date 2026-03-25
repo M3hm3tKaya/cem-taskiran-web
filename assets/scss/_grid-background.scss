@@ -1,0 +1,26 @@
+@use 'variables' as *;
+
+// ── Grid arka plan deseni ──
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: $z-grid;
+  pointer-events: none;
+  background-color: $bg-dark;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      $grid-color 0,
+      $grid-color 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      $grid-color 0,
+      $grid-color 1px,
+      transparent 1px,
+      transparent 50px
+    );
+  opacity: 0.6;
+}

@@ -46,6 +46,12 @@
 - Production build başarılı
 - Three.js ve GSAP chunk optimization (manualChunks)
 
+## Responsive Düzeltmeler (2026-03-26)
+- IntroScreen: tek string → 3 satır ref (line1/line2/line3), font clamp(1.4rem, 5.8vw, 7.5rem), max-width kaldırıldı
+- TypewriterText: useTypewriter composable → inline 3 satır + loop, font clamp(1.8rem, 4.5vw, 3.5rem), max-width kaldırıldı
+- ProcessSteps: desktop offset px → vw (-14vw, -7vw, -5vw, -9vw / 10vw, 8vw, 10vw)
+- HeroSection: padding-top 100px → 160px (nav çakışması fix)
+
 ## Dosya Listesi
 ```
 hle-clone/

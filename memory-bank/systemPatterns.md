@@ -19,9 +19,15 @@ pages/index.vue:
 ```
 
 ## Animasyon Mimarisi
-- **IntroScreen:** useTypewriter → isComplete → GSAP y:-100% perde kalkış → emit
+- **IntroScreen:** 3 satır ref (inline typewriter) → GSAP y:-100% perde kalkış → emit
 - **TVScene:** useMousePerspective → Three.js rotation lerp + ScrollTrigger zoom → triggerTransition → emit
-- **MainContent:** useSnakeTrail canvas + useTypewriter loop + ScrollingList velocity + RotatingDisk wheel
+- **MainContent:** useSnakeTrail canvas + inline typewriter loop (3 satır) + ScrollingList velocity + RotatingDisk wheel
+
+## Responsive Yaklaşım
+- Typewriter metinleri sabit satır kırılmalarıyla 3 satıra bölünür (white-space: nowrap)
+- Font boyutları vw tabanlı clamp() ile viewport orantılı
+- ProcessSteps offsetleri vw birimleri ile ekrana göre ölçeklenir
+- HeroSection padding-top: 160px — fixed nav ile içerik çakışmasını önler
 
 ## Scroll Yönetimi
 - Lenis: Plugin'de başlatılır, intro sırasında `stop()`, TV/Main'de `start()`

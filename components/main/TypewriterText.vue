@@ -95,8 +95,10 @@ onUnmounted(() => {
       </div>
       <div v-if="activeLine >= 3" class="line">
         <span>{{ displayedLine3 }}</span>
-        <span>{{ displayedWord }}</span>
-        <span v-if="activeLine === 3" class="cursor">|</span>
+        <span class="changing-word">
+          <span>{{ displayedWord }}</span>
+          <span v-if="activeLine === 3" class="cursor">|</span>
+        </span>
       </div>
     </h1>
   </div>
@@ -138,6 +140,12 @@ onUnmounted(() => {
 
   @media (max-width: $breakpoint-mobile) {
     white-space: normal;
+  }
+}
+
+.changing-word {
+  @media (max-width: $breakpoint-mobile) {
+    display: block;
   }
 }
 

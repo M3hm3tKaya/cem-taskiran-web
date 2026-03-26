@@ -50,17 +50,54 @@ export function useSnakeTrail(options: SnakeTrailOptions = {}) {
 
   const rgb = hexToRgb(color)
 
-  function onMouseMove(e: MouseEvent) {
+  // Bresenham çizgi algoritması — iki hücre arasındaki tüm hücreleri döndürür
+  function getLineCells(x0: number, y0: number, x1: number, y1: number): { x: number; y: number }[] {
+    const cells: { x: number; y: number }[] = []
+    const dx = Math.abs(x1 - x0)
+    const dy = Math.abs(y1 - y0)
+    const sx = x0 < x1 ? 1 : -1
+    const sy = y0 < y1 ? 1 : -1
+    let err = dx - dy
+    let cx = x0
+    let cy = y0
+
+    while (true) {
+      if (cx !== x0 || cy !== y0) {
+        cells.push({ x: cx, y: cy })
+      }
+      if (cx === x1 && cy === y1) break
+      const e2 = 2 * err
+      if (e2 > -dy) { err -= dy; cx += sx }
+      if (e2 < dx) { err += dx; cy += sy }
+    }
+
+    return cells
+  }
+
+  function onPointerMove(e: PointerEvent) {
     const gridX = Math.floor(e.clientX / cellSize)
     const gridY = Math.floor(e.clientY / cellSize)
 
     if (gridX !== lastGridX || gridY !== lastGridY) {
+      // Mouse + hızlı hareket — aradaki hücreleri doldur (Bresenham)
+      const isFastMouse = e.pointerType === 'mouse'
+        && lastGridX !== -1
+        && (Math.abs(gridX - lastGridX) > 1 || Math.abs(gridY - lastGridY) > 1)
+
+      if (isFastMouse) {
+        const cells = getLineCells(lastGridX, lastGridY, gridX, gridY)
+        for (const cell of cells) {
+          trail.push({ x: cell.x, y: cell.y, age: 0 })
+        }
+      } else {
+        trail.push({ x: gridX, y: gridY, age: 0 })
+      }
+
       lastGridX = gridX
       lastGridY = gridY
-      trail.push({ x: gridX, y: gridY, age: 0 })
 
       if (trail.length > maxTrailLength) {
-        trail.shift()
+        trail = trail.slice(-maxTrailLength)
       }
     }
   }
@@ -143,14 +180,14 @@ export function useSnakeTrail(options: SnakeTrailOptions = {}) {
     if (!canvasRef.value) return
     ctx = canvasRef.value.getContext('2d')
     resize()
-    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
     window.addEventListener('resize', resize, { passive: true })
     render()
   }
 
   function destroy() {
     isDestroyed = true
-    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('pointermove', onPointerMove)
     window.removeEventListener('resize', resize)
     if (animationId !== null) {
       cancelAnimationFrame(animationId)

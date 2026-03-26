@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
+import { useMediaQuery } from '@vueuse/core'
 
 const emit = defineEmits<{
   'intro-complete': []
 }>()
 
 const introRef = ref<HTMLElement | null>(null)
+const isMobile = useMediaQuery('(max-width: 768px)')
 
-// Her satır ayrı ref — satır kırılmaları sabit
-const displayedLine1 = ref('')
-const displayedLine2 = ref('')
-const displayedLine3 = ref('')
+// Dinamik satır dizisi — mobil ve desktop farklı kırılım
+const typedLines = reactive<string[]>([])
 const displayedWord = ref('')
-const activeLine = ref(1)
+const activeLine = ref(0)
+const lineCount = ref(0)
 
-const lines = [
-  'Positioned at the axis',
-  'of talent and content',
-  'across ',
-]
 const changingWords = ['film', 'television', 'music']
 
 let destroyed = false
@@ -28,6 +24,14 @@ function wait(ms: number): Promise<void> {
   return new Promise(resolve => {
     timeoutId = setTimeout(resolve, ms)
   })
+}
+
+async function typeLine(index: number, text: string, speed: number) {
+  for (let i = 0; i <= text.length; i++) {
+    if (destroyed) return
+    typedLines[index] = text.slice(0, i)
+    await wait(speed)
+  }
 }
 
 async function typeText(text: string, target: Ref<string>, speed: number) {
@@ -48,22 +52,31 @@ async function deleteText(target: Ref<string>, speed: number) {
 }
 
 async function startTypewriter() {
-  // Satır 1: "Positioned at the axis"
-  activeLine.value = 1
-  await typeText(lines[0], displayedLine1, 80)
-  if (destroyed) return
-  await wait(200)
+  const lines = isMobile.value ? [
+    'Positioned',
+    'at the axis',
+    'of talent',
+    'and content',
+    'across',
+  ] : [
+    'Positioned at the axis',
+    'of talent and content',
+    'across ',
+  ]
 
-  // Satır 2: "of talent and content"
-  activeLine.value = 2
-  await typeText(lines[1], displayedLine2, 80)
-  if (destroyed) return
-  await wait(200)
+  lineCount.value = lines.length
+  typedLines.splice(0)
+  for (const _ of lines) typedLines.push('')
 
-  // Satır 3: "across "
-  activeLine.value = 3
-  await typeText(lines[2], displayedLine3, 80)
-  if (destroyed) return
+  // Satırları sırayla yaz
+  for (let i = 0; i < lines.length; i++) {
+    if (destroyed) return
+    activeLine.value = i + 1
+    await typeLine(i, lines[i], 80)
+    if (destroyed) return
+    await wait(200)
+  }
+
   await wait(400)
 
   // Değişen kelimeler: film → television → music
@@ -109,19 +122,17 @@ onUnmounted(() => {
 <template>
   <div ref="introRef" class="intro-screen">
     <div class="intro-text">
-      <div v-if="activeLine >= 1" class="line">
-        <span>{{ displayedLine1 }}</span>
-        <span v-if="activeLine === 1" class="cursor">|</span>
-      </div>
-      <div v-if="activeLine >= 2" class="line">
-        <span>{{ displayedLine2 }}</span>
-        <span v-if="activeLine === 2" class="cursor">|</span>
-      </div>
-      <div v-if="activeLine >= 3" class="line">
-        <span>{{ displayedLine3 }}</span>
+      <template v-for="(text, i) in typedLines" :key="i">
+        <div v-if="activeLine >= i + 1 && i < lineCount - 1" class="line">
+          <span>{{ text }}</span>
+          <span v-if="activeLine === i + 1" class="cursor">|</span>
+        </div>
+      </template>
+      <div v-if="activeLine >= lineCount" class="line">
+        <span>{{ typedLines[lineCount - 1] }}</span>
         <span class="changing-word">
           <span>{{ displayedWord }}</span>
-          <span v-if="activeLine === 3" class="cursor">|</span>
+          <span class="cursor">|</span>
         </span>
       </div>
     </div>
@@ -156,10 +167,6 @@ onUnmounted(() => {
 
 .line {
   white-space: nowrap;
-
-  @media (max-width: 768px) {
-    white-space: normal;
-  }
 }
 
 .changing-word {

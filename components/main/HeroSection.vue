@@ -42,7 +42,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 100px 60px 40px;
+  padding: 160px 60px 40px;
   z-index: $z-main;
 
   @media (max-width: $breakpoint-mobile) {

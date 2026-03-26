@@ -5,15 +5,15 @@ import { useMediaQuery } from '@vueuse/core'
 const isMobile = useMediaQuery('(max-width: 768px)')
 
 const steps = computed(() => isMobile.value ? [
-  { num: 1, label: 'Develop', offsetX: -20, offsetY: 0 },
-  { num: 2, label: 'Submit', offsetX: 10, offsetY: 40 },
-  { num: 3, label: 'Creative Review', offsetX: -10, offsetY: 40 },
-  { num: 4, label: 'Pitch', offsetX: 20, offsetY: 40 },
+  { num: 1, label: 'Develop', offsetX: '-20px', offsetY: '0px' },
+  { num: 2, label: 'Submit', offsetX: '10px', offsetY: '40px' },
+  { num: 3, label: 'Creative Review', offsetX: '-10px', offsetY: '40px' },
+  { num: 4, label: 'Pitch', offsetX: '20px', offsetY: '40px' },
 ] : [
-  { num: 1, label: 'Develop', offsetX: -400, offsetY: 0 },
-  { num: 2, label: 'Submit', offsetX: -200, offsetY: 200 },
-  { num: 3, label: 'Creative Review', offsetX: -160, offsetY: 150 },
-  { num: 4, label: 'Pitch', offsetX: -240, offsetY: 200 },
+  { num: 1, label: 'Develop', offsetX: '-14vw', offsetY: '0px' },
+  { num: 2, label: 'Submit', offsetX: '-7vw', offsetY: '10vw' },
+  { num: 3, label: 'Creative Review', offsetX: '-5vw', offsetY: '8vw' },
+  { num: 4, label: 'Pitch', offsetX: '-9vw', offsetY: '10vw' },
 ])
 
 const stepsRef = ref<HTMLElement[]>([])
@@ -50,8 +50,8 @@ onMounted(() => {
       :ref="(el) => { if (el) stepsRef[i] = el as HTMLElement }"
       class="step"
       :style="{
-        marginLeft: step.offsetX + 'px',
-        marginTop: step.offsetY + 'px',
+        marginLeft: step.offsetX,
+        marginTop: step.offsetY,
       }"
     >
       <span class="step-num">[{{ step.num }}]</span>

@@ -7,10 +7,18 @@ const emit = defineEmits<{
 
 const introRef = ref<HTMLElement | null>(null)
 
-// Typewriter state
-const displayedBase = ref('')
+// Her satır ayrı ref — satır kırılmaları sabit
+const displayedLine1 = ref('')
+const displayedLine2 = ref('')
+const displayedLine3 = ref('')
 const displayedWord = ref('')
-const baseText = 'Positioned at the axis of talent and content across '
+const activeLine = ref(1)
+
+const lines = [
+  'Positioned at the axis',
+  'of talent and content',
+  'across ',
+]
 const changingWords = ['film', 'television', 'music']
 
 let destroyed = false
@@ -40,12 +48,25 @@ async function deleteText(target: Ref<string>, speed: number) {
 }
 
 async function startTypewriter() {
-  // Temel metni yaz
-  await typeText(baseText, displayedBase, 80)
+  // Satır 1: "Positioned at the axis"
+  activeLine.value = 1
+  await typeText(lines[0], displayedLine1, 80)
+  if (destroyed) return
+  await wait(200)
+
+  // Satır 2: "of talent and content"
+  activeLine.value = 2
+  await typeText(lines[1], displayedLine2, 80)
+  if (destroyed) return
+  await wait(200)
+
+  // Satır 3: "across "
+  activeLine.value = 3
+  await typeText(lines[2], displayedLine3, 80)
   if (destroyed) return
   await wait(400)
 
-  // Kelimeleri sırayla yaz/sil
+  // Değişen kelimeler: film → television → music
   for (let i = 0; i < changingWords.length; i++) {
     if (destroyed) return
     await typeText(changingWords[i], displayedWord, 80)
@@ -88,9 +109,19 @@ onUnmounted(() => {
 <template>
   <div ref="introRef" class="intro-screen">
     <div class="intro-text">
-      <span>{{ displayedBase }}</span>
-      <span>{{ displayedWord }}</span>
-      <span class="cursor">|</span>
+      <div v-if="activeLine >= 1" class="line">
+        <span>{{ displayedLine1 }}</span>
+        <span v-if="activeLine === 1" class="cursor">|</span>
+      </div>
+      <div v-if="activeLine >= 2" class="line">
+        <span>{{ displayedLine2 }}</span>
+        <span v-if="activeLine === 2" class="cursor">|</span>
+      </div>
+      <div v-if="activeLine >= 3" class="line">
+        <span>{{ displayedLine3 }}</span>
+        <span>{{ displayedWord }}</span>
+        <span v-if="activeLine === 3" class="cursor">|</span>
+      </div>
     </div>
   </div>
 </template>
@@ -108,18 +139,20 @@ onUnmounted(() => {
 
 .intro-text {
   padding: 60px;
-  max-width: 75vw;
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 700;
-  font-size: clamp(3rem, 8.4vw, 7.8rem);
-  line-height: 1.08;
+  font-size: clamp(1.4rem, 5.8vw, 7.5rem);
+  line-height: 1.15;
   color: #ffffff;
   letter-spacing: -0.02em;
 
   @media (max-width: 768px) {
     padding: 40px 24px 0;
-    max-width: 95vw;
   }
+}
+
+.line {
+  white-space: nowrap;
 }
 
 .cursor {

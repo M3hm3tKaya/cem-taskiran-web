@@ -129,12 +129,16 @@ onUnmounted(() => {
   letter-spacing: -0.02em;
 
   @media (max-width: $breakpoint-mobile) {
-    font-size: clamp(1.4rem, 6vw, 2.5rem);
+    font-size: 12vw;
   }
 }
 
 .line {
   white-space: nowrap;
+
+  @media (max-width: $breakpoint-mobile) {
+    white-space: normal;
+  }
 }
 
 .cursor {

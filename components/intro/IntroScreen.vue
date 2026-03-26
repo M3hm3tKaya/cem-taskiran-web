@@ -148,11 +148,16 @@ onUnmounted(() => {
 
   @media (max-width: 768px) {
     padding: 40px 24px 0;
+    font-size: 12vw;
   }
 }
 
 .line {
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    white-space: normal;
+  }
 }
 
 .cursor {

@@ -60,9 +60,9 @@ export default defineNuxtConfig({
     appManifest: false,
   },
 
-  // Cloudflare Pages deploy
+  // Cloudflare Pages deploy (static SPA)
   nitro: {
-    preset: 'cloudflare-pages',
+    preset: 'cloudflare-pages-static',
   },
 
   devtools: { enabled: false },

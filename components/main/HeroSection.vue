@@ -17,7 +17,7 @@
 
     <!-- Alt bar -->
     <div class="hero-bottom-bar">
-      <span class="bar-left">Film &middot; Commercial &middot; Platform Content</span>
+      <span class="bar-left">Content &middot; Commercial &middot; Film &middot; Systems</span>
       <span class="bar-center">Production infrastructure, not just production</span>
       <span class="bar-right">&darr;</span>
     </div>

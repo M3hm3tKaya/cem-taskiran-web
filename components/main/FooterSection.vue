@@ -5,8 +5,7 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-left">
-        <span class="footer-logo">CT1</span>
-        <span class="footer-copy">&copy; 2026 CT1 Media</span>
+        <img src="/ct-logo-orange.png" alt="CT1 Media" class="footer-logo" />
       </div>
       <div class="footer-right">
         <span>All rights reserved</span>
@@ -41,16 +40,12 @@
   }
 }
 
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
 .footer-logo {
-  font-size: 18px;
-  font-weight: 700;
-  color: $accent;
-  letter-spacing: 0.1em;
+  height: 134px;
+  width: auto;
+
+  @media (max-width: $breakpoint-mobile) {
+    height: 100px;
+  }
 }
 </style>

@@ -112,7 +112,7 @@ function drawStaticParts() {
   const s = 2
 
   // Arka plan
-  ctx.fillStyle = '#F0EDE8'
+  ctx.fillStyle = '#8A8A8A'
   ctx.fillRect(0, 0, W, H)
 
   // Bezel outer
@@ -326,9 +326,9 @@ function createTVBox() {
   )
 
   const bodyMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#FFFFFF'),
-    roughness: 0.25,
-    metalness: 0.01,
+    color: new THREE.Color('#8A8A8A'),
+    roughness: 0.35,
+    metalness: 0.02,
   })
   const tvBody = new THREE.Mesh(geom, bodyMat)
   tvBody.castShadow = true
@@ -357,7 +357,7 @@ function createTVBox() {
 
   // 3D düğmeler — silindir, ön yüzden çıkık, gölge yapar
   const knobMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#F0EDE8'),
+    color: new THREE.Color('#8A8A8A'),
     roughness: 0.35,
     metalness: 0.02,
   })
@@ -435,7 +435,7 @@ function createTVBox() {
   // Dış kanal — açık gri
   const trackGeom = new THREE.ExtrudeGeometry(trackShape, { depth: 0.01, bevelEnabled: false })
   trackGeom.center()
-  const trackMat = new THREE.MeshStandardMaterial({ color: new THREE.Color('#C0BEBB'), roughness: 0.5 })
+  const trackMat = new THREE.MeshStandardMaterial({ color: new THREE.Color('#7A7A7A'), roughness: 0.5 })
   const trackMesh = new THREE.Mesh(trackGeom, trackMat)
   trackMesh.position.set(switchX, switchY, 0.008)
   tvGroup.add(trackMesh)

@@ -92,8 +92,8 @@ $disk-center-y: 55%;
 }
 
 .disk-paragraph {
-  font-family: $font-mono;
-  font-weight: 700;
+  font-family: $font-heading;
+  font-weight: 500;
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1.15;
   color: $text-white;

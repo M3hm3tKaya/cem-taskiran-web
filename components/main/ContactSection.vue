@@ -40,7 +40,7 @@
 }
 
 .contact-text {
-  font-family: $font-mono;
+  font-family: $font-heading;
   font-size: 14px;
   line-height: 1.7;
   color: $text-gray;

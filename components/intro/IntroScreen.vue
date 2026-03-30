@@ -146,7 +146,7 @@ onUnmounted(() => {
 
 .intro-text {
   padding: 60px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-weight: 700;
   font-size: clamp(1.4rem, 5.8vw, 7.5rem);
   line-height: 1.15;

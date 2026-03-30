@@ -3,16 +3,13 @@
 
 <template>
   <section class="hero-section">
-    <div class="hero-layout">
-      <!-- Sol taraf: Başlık + açıklama -->
-      <div class="hero-left">
-        <MainTypewriterText />
-      </div>
+    <div class="hero-content">
+      <MainTypewriterText />
+    </div>
 
-      <!-- Sağ taraf: Kelime bulutu -->
-      <div class="hero-right">
-        <MainProcessSteps />
-      </div>
+    <!-- Kayan kelime listesi -->
+    <div class="marquee-area">
+      <MainProcessSteps />
     </div>
 
     <!-- Alt bar -->
@@ -39,19 +36,7 @@
   }
 }
 
-.hero-layout {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 40px;
-  flex: 1;
-
-  @media (max-width: $breakpoint-tablet) {
-    flex-direction: column;
-  }
-}
-
-.hero-left {
+.hero-content {
   flex: 1;
   max-width: 65%;
 
@@ -60,22 +45,11 @@
   }
 }
 
-.hero-right {
-  flex-shrink: 0;
-  padding-top: 40px;
-  padding-right: 40px;
-  display: flex;
-  align-items: center;
-  min-height: 320px;
-
-  @media (max-width: $breakpoint-tablet) {
-    align-self: flex-end;
-    min-height: 240px;
-  }
+.marquee-area {
+  padding: 40px 0;
 
   @media (max-width: $breakpoint-mobile) {
-    padding-right: 0;
-    min-height: 200px;
+    padding: 24px 0;
   }
 }
 
@@ -84,7 +58,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
-  font-family: $font-mono;
+  font-family: $font-heading;
   color: $text-gray;
   padding-top: 20px;
   border-top: 1px solid $grid-color;
@@ -99,5 +73,6 @@
 .bar-center {
   color: $text-white;
   font-size: 12px;
+  font-family: $font-heading;
 }
 </style>

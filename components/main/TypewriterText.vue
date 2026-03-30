@@ -25,8 +25,8 @@
 }
 
 .hero-heading {
-  font-family: $font-mono;
-  font-weight: 700;
+  font-family: $font-heading;
+  font-weight: 500;
   font-size: clamp(1.8rem, 4.5vw, 3.5rem);
   line-height: 1.15;
   color: $text-white;
@@ -46,7 +46,7 @@
   font-size: 13px;
   line-height: 1.7;
   color: #ccc;
-  font-family: $font-mono;
+  font-family: $font-heading;
   max-width: 560px;
 
   @media (max-width: $breakpoint-mobile) {

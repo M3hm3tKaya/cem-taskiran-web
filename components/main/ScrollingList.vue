@@ -43,9 +43,9 @@ const brands = [
 }
 
 .section-title {
-  font-family: $font-mono;
+  font-family: $font-heading;
   font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.05;
   color: $text-gray;
   letter-spacing: 0.02em;

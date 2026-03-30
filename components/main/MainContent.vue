@@ -15,15 +15,6 @@ onMounted(() => {
     <!-- Grid arka plan + yılan efekti -->
     <MainGridBackground />
 
-    <!-- Navigasyon (fixed) -->
-    <nav class="main-nav overlay-fixed">
-      <ul>
-        <li><span class="bullet">&bull;</span> Work</li>
-        <li><span class="bullet">&bull;</span> Studio</li>
-        <li><span class="bullet">&bull;</span> Contact</li>
-      </ul>
-    </nav>
-
     <!-- Logo (fixed) -->
     <div class="main-logo overlay-fixed">
       <img src="/ct-logo-orange.png" alt="CT1 Media" />

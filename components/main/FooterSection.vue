@@ -6,6 +6,7 @@
     <div class="footer-content">
       <div class="footer-left">
         <img src="/ct-logo-orange.png" alt="CT1 Media" class="footer-logo" />
+        <span>&copy; 2026 CT1 Media</span>
       </div>
       <div class="footer-right">
         <span>All rights reserved</span>
@@ -40,12 +41,18 @@
   }
 }
 
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .footer-logo {
-  height: 134px;
+  height: 94px;
   width: auto;
 
   @media (max-width: $breakpoint-mobile) {
-    height: 100px;
+    height: 70px;
   }
 }
 </style>

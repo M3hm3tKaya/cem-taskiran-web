@@ -747,13 +747,6 @@ onUnmounted(() => {
 <template>
   <div ref="containerRef" class="tv-scene-container">
     <!-- Overlay'ler -->
-    <div class="ov nav-ov">
-      <ul>
-        <li><span class="b">&bull;</span> Work</li>
-        <li><span class="b">&bull;</span> Studio</li>
-        <li><span class="b">&bull;</span> Contact</li>
-      </ul>
-    </div>
     <div class="ov logo-ov"><img src="/ct-logo-black.png" alt="CT1" class="logo-img" /></div>
     <div class="ov time-ov">{{ currentTime }}</div>
     <div class="ov tag-ov">// Entertainment production backed by technical infrastructure</div>

@@ -37,7 +37,7 @@
 - Disk: "A production studio that treats technology as method, not marketing."
 - Contact: "Right project, right conversation." + mailto:cem@ct1.media
 - Contact box üst border accent renk
-- Footer: CT1 (#F04E23) + © 2026 CT1 Media
+- Footer: turuncu logo (134px) + "All rights reserved" (CT1 text ve copyright kaldırıldı)
 
 ### TV Sahnesi
 - Logo: siyah versiyon, 67px

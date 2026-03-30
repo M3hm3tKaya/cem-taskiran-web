@@ -44,7 +44,7 @@
 - Statik başlık (typewriter kaldırıldı)
 - Açıklama güncellendi
 - "Submit Your Pitch" kaldırıldı
-- Alt bar: "Film · Advertising · Digital" / "Production infrastructure..." / "↓"
+- Alt bar: "Film · Commercial · Platform Content" / "Production infrastructure..." / "↓"
 
 ### Word Cloud (ProcessSteps.vue)
 - 19 kelime havuzu, 3×2 grid yerleşim

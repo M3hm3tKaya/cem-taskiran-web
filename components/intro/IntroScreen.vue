@@ -9,16 +9,13 @@ const emit = defineEmits<{
 const introRef = ref<HTMLElement | null>(null)
 const isMobile = useMediaQuery('(max-width: 768px)')
 
-// Dinamik satır dizisi — mobil ve desktop farklı kırılım
 const typedLines = reactive<string[]>([])
-const displayedWord = ref('')
 const activeLine = ref(0)
 const lineCount = ref(0)
 
-const changingWords = ['film', 'television', 'music']
-
 let destroyed = false
 let timeoutId: ReturnType<typeof setTimeout> | null = null
+let currentSpeed = 80 // scroll ile azalır
 
 function wait(ms: number): Promise<void> {
   return new Promise(resolve => {
@@ -26,73 +23,68 @@ function wait(ms: number): Promise<void> {
   })
 }
 
-async function typeLine(index: number, text: string, speed: number) {
+async function typeLine(index: number, text: string) {
   for (let i = 0; i <= text.length; i++) {
     if (destroyed) return
     typedLines[index] = text.slice(0, i)
-    await wait(speed)
+    await wait(currentSpeed)
   }
 }
 
-async function typeText(text: string, target: Ref<string>, speed: number) {
-  for (let i = 0; i <= text.length; i++) {
-    if (destroyed) return
-    target.value = text.slice(0, i)
-    await wait(speed)
+// Scroll ile hızlandır + TV sahnesine geçişi engelle
+function onWheel(e: WheelEvent) {
+  e.preventDefault()
+  e.stopPropagation()
+  if (e.deltaY > 0) {
+    currentSpeed = Math.max(8, currentSpeed - 12)
   }
 }
 
-async function deleteText(target: Ref<string>, speed: number) {
-  const text = target.value
-  for (let i = text.length; i >= 0; i--) {
-    if (destroyed) return
-    target.value = text.slice(0, i)
-    await wait(speed)
+// Mobil: touch ile hızlandır + TV sahnesine geçişi engelle
+let touchStartY = 0
+
+function onTouchStart(e: TouchEvent) {
+  touchStartY = e.touches[0].clientY
+}
+
+function onTouchMove(e: TouchEvent) {
+  e.preventDefault()
+  e.stopPropagation()
+  const deltaY = touchStartY - e.touches[0].clientY
+  touchStartY = e.touches[0].clientY
+  if (deltaY > 0) {
+    currentSpeed = Math.max(8, currentSpeed - 8)
   }
 }
 
 async function startTypewriter() {
   const lines = isMobile.value ? [
-    'Positioned',
-    'at the axis',
-    'of talent',
-    'and content',
-    'across',
+    "We don't just",
+    'produce',
+    'content.',
+    'We engineer',
+    "how it's",
+    'made.',
   ] : [
-    'Positioned at the axis',
-    'of talent and content',
-    'across ',
+    "We don't just",
+    'produce content.',
+    'We engineer',
+    "how it's made.",
   ]
 
   lineCount.value = lines.length
   typedLines.splice(0)
   for (const _ of lines) typedLines.push('')
 
-  // Satırları sırayla yaz
   for (let i = 0; i < lines.length; i++) {
     if (destroyed) return
     activeLine.value = i + 1
-    await typeLine(i, lines[i], 80)
+    await typeLine(i, lines[i])
     if (destroyed) return
-    await wait(200)
+    await wait(Math.min(currentSpeed * 2, 200))
   }
 
-  await wait(400)
-
-  // Değişen kelimeler: film → television → music
-  for (let i = 0; i < changingWords.length; i++) {
-    if (destroyed) return
-    await typeText(changingWords[i], displayedWord, 80)
-    if (i < changingWords.length - 1) {
-      await wait(1500)
-      if (destroyed) return
-      await deleteText(displayedWord, 50)
-      await wait(300)
-    }
-  }
-
-  // Tamamlandı — perde kaldır
-  await wait(800)
+  await wait(Math.min(currentSpeed * 10, 1200))
   curtainUp()
 }
 
@@ -110,30 +102,32 @@ function curtainUp() {
 
 onMounted(() => {
   document.body.style.overflow = 'hidden'
+  window.addEventListener('wheel', onWheel, { passive: false, capture: true })
+  window.addEventListener('touchstart', onTouchStart, { passive: true, capture: true })
+  window.addEventListener('touchmove', onTouchMove, { passive: false, capture: true })
   setTimeout(() => startTypewriter(), 500)
 })
 
 onUnmounted(() => {
   destroyed = true
   if (timeoutId) clearTimeout(timeoutId)
+  window.removeEventListener('wheel', onWheel, { capture: true })
+  window.removeEventListener('touchstart', onTouchStart, { capture: true })
+  window.removeEventListener('touchmove', onTouchMove, { capture: true })
 })
 </script>
 
 <template>
   <div ref="introRef" class="intro-screen">
     <div class="intro-text">
-      <template v-for="(text, i) in typedLines" :key="i">
-        <div v-if="activeLine >= i + 1 && i < lineCount - 1" class="line">
-          <span>{{ text }}</span>
-          <span v-if="activeLine === i + 1" class="cursor">|</span>
-        </div>
-      </template>
-      <div v-if="activeLine >= lineCount" class="line">
-        <span>{{ typedLines[lineCount - 1] }}</span>
-        <span class="changing-word">
-          <span>{{ displayedWord }}</span>
-          <span class="cursor">|</span>
-        </span>
+      <div
+        v-for="(text, i) in typedLines"
+        :key="i"
+        v-show="activeLine >= i + 1"
+        class="line"
+      >
+        <span>{{ text }}</span>
+        <span v-if="activeLine === i + 1" class="cursor">|</span>
       </div>
     </div>
   </div>
@@ -169,16 +163,11 @@ onUnmounted(() => {
   white-space: nowrap;
 }
 
-.changing-word {
-  @media (max-width: 768px) {
-    display: block;
-  }
-}
-
 .cursor {
   display: inline-block;
   font-weight: 300;
   margin-left: 2px;
+  color: $accent;
   animation: blink 530ms step-end infinite;
 }
 

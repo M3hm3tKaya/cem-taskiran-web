@@ -4,7 +4,7 @@ const { canvasRef } = useSnakeTrail({
   cellSize: 50,
   maxTrailLength: 20,
   fadeSpeed: 0.015,
-  color: '#00D4FF',
+  color: '#F04E23',
   gridLineColor: '#2A2A2D',
   gridLineOpacity: 0.6,
 })

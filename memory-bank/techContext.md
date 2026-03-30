@@ -1,6 +1,6 @@
-# Tech Context — HLE.IO Clone
+# Tech Context — CT1 Media Web
 
-## Tech Stack (Gerçek Versiyonlar)
+## Tech Stack
 | Teknoloji | Versiyon | Kullanım |
 |-----------|----------|----------|
 | Node.js | 22.20.0 | Runtime |
@@ -17,26 +17,34 @@
 
 ## Font
 - IBM Plex Mono (Google Fonts — 400, 500, 700)
-- font-display: swap (Google Fonts varsayılanı)
 
 ## Renkler
-- $bg-dark: #1A1A1D
+- $bg-dark: #0E0E10
 - $bg-darker: #101011
 - $text-white: #FFFFFF
 - $text-gray: #888888
-- $accent-cyan: #00D4FF
+- $accent: #F04E23 (turuncu-kırmızı)
 - $grid-color: #2A2A2D
 
 ## SCSS
 - `additionalData` ile `_variables.scss` tüm `<style>` bloklarına inject
-- Her partial kendi `@use 'variables' as *` import'unu yapıyor (SCSS modules kuralı)
 - `main.scss` global stiller
 
 ## Plugin Entegrasyonu
 - `gsap.client.ts`: GSAP register + provide
-- `lenis.client.ts`: Lenis instance + GSAP ticker entegrasyonu + başlangıçta stop
+- `lenis.client.ts`: Lenis instance + GSAP ticker entegrasyonu
+
+## Assetler
+- `public/ct-logo-white.png` — beyaz logo, şeffaf bg
+- `public/ct-logo-orange.png` — turuncu logo, şeffaf bg (nav/header)
+- `public/ct-logo-black.png` — siyah logo, şeffaf bg (TV sahnesi)
+- `public/videos/CT_INTRO.mp4` — TV ekranı videosu (20MB)
+
+## Deploy
+- Cloudflare Pages (cloudflare-pages-static preset)
+- Wrangler CLI ile deploy
+- Domain: cem-taskiran-web.pages.dev / cem.mhtbilisim.com
 
 ## Build
-- Production build başarılı
-- Three.js chunk: ~500KB (gzip: ~128KB) — beklenen
+- Three.js chunk ~500KB (gzip ~133KB)
 - manualChunks ile three ve gsap ayrı chunk'larda

@@ -18,15 +18,15 @@ onMounted(() => {
     <!-- Navigasyon (fixed) -->
     <nav class="main-nav overlay-fixed">
       <ul>
-        <li><span class="bullet">&bull;</span> About us</li>
-        <li><span class="bullet">&bull;</span> Contacts</li>
-        <li><span class="bullet">&bull;</span> FAQ</li>
+        <li><span class="bullet">&bull;</span> Work</li>
+        <li><span class="bullet">&bull;</span> Studio</li>
+        <li><span class="bullet">&bull;</span> Contact</li>
       </ul>
     </nav>
 
     <!-- Logo (fixed) -->
     <div class="main-logo overlay-fixed">
-      <span>HL</span>
+      <img src="/ct-logo-orange.png" alt="CT1 Media" />
     </div>
 
     <!-- Sections -->
@@ -81,7 +81,7 @@ onMounted(() => {
 
   .bullet {
     margin-right: 6px;
-    color: $text-gray;
+    color: $accent;
   }
 
   @media (max-width: $breakpoint-mobile) {
@@ -94,12 +94,16 @@ onMounted(() => {
   top: 40px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+
+  img {
+    height: 67px;
+    width: auto;
+  }
 
   @media (max-width: $breakpoint-mobile) {
     top: 20px;
+
+    img { height: 53px; }
   }
 }
 </style>

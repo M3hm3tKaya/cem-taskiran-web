@@ -5,8 +5,8 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-left">
-        <span class="footer-logo">HL</span>
-        <span class="footer-copy">&copy; 2026 HLE Entertainment</span>
+        <span class="footer-logo">CT1</span>
+        <span class="footer-copy">&copy; 2026 CT1 Media</span>
       </div>
       <div class="footer-right">
         <span>All rights reserved</span>
@@ -50,7 +50,7 @@
 .footer-logo {
   font-size: 18px;
   font-weight: 700;
-  color: $text-white;
+  color: $accent;
   letter-spacing: 0.1em;
 }
 </style>

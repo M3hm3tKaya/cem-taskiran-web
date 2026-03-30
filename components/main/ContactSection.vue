@@ -4,13 +4,8 @@
 <template>
   <section class="contact-section">
     <div class="contact-box">
-      <div class="arrow-down">&darr;</div>
-      <p class="contact-text">
-        Entertainment company helping people get their
-        idea sold to networks and production companies
-        through our contacts in NYC and LA
-      </p>
-      <a href="#" class="contact-btn">Get In Touch</a>
+      <p class="contact-text">Right project, right conversation<span class="accent">.</span></p>
+      <a href="mailto:cem@ct1.media" class="contact-email">cem@ct1.media</a>
     </div>
   </section>
 </template>
@@ -32,10 +27,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 50px 80px 50px;
-  max-width: 700px;
+  border-top: 2px solid $accent;
+  padding: 50px 80px;
+  max-width: 500px;
   width: 100%;
 
   @media (max-width: $breakpoint-mobile) {
@@ -43,34 +39,29 @@
   }
 }
 
-.arrow-down {
-  font-size: 20px;
-  color: $text-gray;
-}
-
 .contact-text {
   font-family: $font-mono;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
   color: $text-gray;
   text-align: center;
-  max-width: 480px;
 }
 
-.contact-btn {
+.accent {
+  color: $accent;
+}
+
+.contact-email {
   font-family: $font-mono;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: $text-white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 30px;
-  padding: 12px 36px;
-  cursor: pointer;
-  transition: background-color 0.3s, border-color 0.3s;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: color 0.3s;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.5);
+    color: $accent;
   }
 }
 </style>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HLE Intro - Metin Onay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #101011;
+      font-family: 'IBM Plex Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .intro-text {
+      padding: 60px;
+      font-weight: 700;
+      font-size: clamp(1.4rem, 5.8vw, 7.5rem);
+      line-height: 1.15;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .line {
+      white-space: nowrap;
+    }
+
+    .changing-word {
+      color: #00D4FF;
+    }
+
+    .cursor {
+      font-weight: 300;
+      margin-left: 2px;
+      animation: blink 530ms step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ---- Duzenlenebilir alanlar icin isaretler ---- */
+    .editable {
+      outline: 1px dashed rgba(0, 212, 255, 0.3);
+      outline-offset: 4px;
+    }
+
+    .edit-hint {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      color: #00D4FF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 400;
+      padding: 12px 16px;
+      border-radius: 4px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .intro-text {
+        padding: 40px 24px 0;
+        font-size: 12vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="intro-text">
+    <!--
+      INTRO EKRANI METINLERI
+      Asagidaki satirlari duzenleyebilirsiniz.
+      Her <div class="line"> bir satira karsilik gelir.
+      Son satirdaki "changing-word" kisminda degisen kelimeler yer alir.
+    -->
+
+    <div class="line editable">Positioned at the axis</div>
+    <div class="line editable">of talent and content</div>
+    <div class="line">
+      <span class="editable">across </span>
+      <span class="changing-word">film<span class="cursor">|</span></span>
+    </div>
+
+    <!-- Degisen kelimeler (sitede sirayla gorunur): -->
+    <!--
+      1. film
+      2. television
+      3. music
+    -->
+  </div>
+
+  <div class="edit-hint">
+    Mavi cerceveli alanlardaki metinleri<br>
+    duzenleyebilirsiniz.<br><br>
+    Degisen kelimeler: film / television / music
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CT1 Media — Metin Onay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #0E0E10;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(42, 42, 45, 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 42, 45, 0.6) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .editable {
+      outline: 1px dashed rgba(240, 78, 35, 0.3);
+      outline-offset: 4px;
+    }
+
+    .main-nav {
+      position: fixed;
+      top: 40px;
+      left: 40px;
+      z-index: 20;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .main-nav li { cursor: pointer; }
+    .main-nav .bullet { margin-right: 6px; color: #F04E23; }
+
+    .main-logo {
+      position: fixed;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+    }
+    .main-logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    .hero-heading .accent {
+      color: #F04E23;
+    }
+
+    .hero-section {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 160px 60px 40px;
+    }
+
+    .hero-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex: 1;
+    }
+
+    .hero-left { flex: 1; max-width: 65%; }
+
+    .hero-heading {
+      font-weight: 700;
+      font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-description {
+      margin-top: 80px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #ccc;
+      max-width: 560px;
+    }
+    .hero-description p { margin-bottom: 0; }
+
+    .hero-right {
+      flex-shrink: 0;
+      padding-top: 40px;
+      padding-right: 40px;
+      display: flex;
+      align-items: center;
+      min-height: 320px;
+    }
+
+    .word-cloud {
+      position: relative;
+      width: 280px;
+      height: 320px;
+    }
+
+    .wc-word {
+      position: absolute;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #555;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 1.2s ease, color 1.2s ease;
+    }
+
+    .wc-word.active {
+      opacity: 1;
+      color: #888;
+    }
+
+    .wc-word.highlight {
+      opacity: 1;
+      color: #F04E23;
+    }
+
+    .hero-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #888;
+      padding-top: 20px;
+      border-top: 1px solid #2A2A2D;
+    }
+    .bar-center { color: #fff; font-size: 12px; }
+
+    .scrolling-section {
+      position: relative;
+      z-index: 10;
+      padding: 120px 0 80px;
+    }
+
+    .section-header {
+      padding: 0 60px;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 40px;
+      color: #888;
+      letter-spacing: 0.02em;
+    }
+
+    .logo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px 60px;
+      padding: 0 60px;
+      align-items: center;
+    }
+
+    .logo-item {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 24px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+    }
+
+    .disk-section {
+      position: relative;
+      z-index: 10;
+      min-height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 60px;
+    }
+    .disk-text {
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
+      font-weight: 500;
+      line-height: 1.4;
+      text-align: center;
+      letter-spacing: -0.01em;
+      color: #ccc;
+      max-width: 700px;
+    }
+
+    .contact-section {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      padding: 80px 60px 120px;
+    }
+    .contact-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 2px solid #F04E23;
+      padding: 50px 80px;
+      max-width: 500px;
+      width: 100%;
+    }
+    .contact-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #888;
+      text-align: center;
+    }
+    .contact-email {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+    }
+    .contact-email:hover {
+      color: #F04E23;
+    }
+
+    .site-footer {
+      position: relative;
+      z-index: 10;
+      padding: 40px 60px;
+      border-top: 1px solid #2A2A2D;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #888;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #F04E23;
+      letter-spacing: 0.1em;
+    }
+
+    .section-divider {
+      padding: 0 60px;
+    }
+    .section-divider hr {
+      border: none;
+      border-top: 1px solid #2A2A2D;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-layout { flex-direction: column; }
+      .hero-left { max-width: 100%; }
+      .hero-right { align-self: flex-end; min-height: 240px; }
+      .word-cloud { width: 240px; height: 240px; }
+    }
+
+    @media (max-width: 768px) {
+      .main-nav { top: 20px; left: 20px; }
+      .main-logo { top: 20px; }
+      .hero-section { padding: 100px 24px 24px; }
+      .hero-heading { font-size: 8vw; }
+      .hero-description { margin-top: 40px; font-size: 12px; }
+      .hero-right { padding-right: 0; min-height: 200px; }
+      .word-cloud { width: 200px; height: 200px; }
+      .wc-word { font-size: 11px; }
+      .hero-bottom-bar { flex-direction: column; gap: 8px; text-align: center; }
+      .section-header { padding: 0 24px; }
+      .scrolling-section { padding: 60px 0 40px; }
+      .logo-grid { gap: 20px 30px; padding: 0 24px; }
+      .disk-section { padding: 60px 24px; }
+      .contact-section { padding: 60px 24px 80px; }
+      .contact-box { padding: 36px 28px; }
+      .site-footer { padding: 30px 24px; }
+      .footer-content { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid-bg"></div>
+
+  <!-- Nav -->
+  <ul class="main-nav">
+    <li class="editable"><span class="bullet">&bull;</span> Work</li>
+    <li class="editable"><span class="bullet">&bull;</span> Studio</li>
+    <li class="editable"><span class="bullet">&bull;</span> Contact</li>
+  </ul>
+  <div class="main-logo"><img src="CT_LOGO_Paper.jpg" alt="CT1 Media"></div>
+
+  <!-- ============================================ -->
+  <!-- HERO                                         -->
+  <!-- ============================================ -->
+  <section class="hero-section">
+    <div class="hero-layout">
+      <div class="hero-left">
+
+        <h1 class="hero-heading editable">
+          We don't just produce content<span class="accent">.</span><br>
+          We engineer how it's made<span class="accent">.</span>
+        </h1>
+
+        <div class="hero-description">
+          <p class="editable">
+            Entertainment production backed by technical infrastructure.<br>
+            Built for precision, speed, and platform intelligence.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: Word Cloud -->
+      <div class="hero-right">
+        <div class="word-cloud" id="wordCloud">
+          <!--
+            KELIME HAVUZU
+            Asagidaki kelimeleri duzenleyebilirsiniz.
+            Pozisyonlar (top/left) ve animasyon JS tarafindan yonetilir.
+          -->
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hero-bottom-bar">
+      <span class="bar-left editable">Film &middot; Advertising &middot; Digital</span>
+      <span class="bar-center editable">Production infrastructure, not just production</span>
+      <span class="bar-right editable">&darr;</span>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- BRANDS / LOGOS                               -->
+  <!-- ============================================ -->
+  <section class="scrolling-section">
+    <div class="section-header">
+      <h2 class="section-title editable">Brands we've built for<span style="color:#F04E23">.</span></h2>
+    </div>
+
+    <!--
+      LOGO GRID
+      Asagidaki placeholder'lari gercek marka logolari ile degistireceksiniz.
+      Her .logo-item bir marka logosuna karsilik gelir.
+    -->
+    <div class="logo-grid">
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+      <div class="logo-item editable">Brand Logo</div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- STUDIO STATEMENT                             -->
+  <!-- ============================================ -->
+  <section class="disk-section">
+    <p class="disk-text editable">A production studio that treats technology as method, not marketing<span style="color:#F04E23">.</span></p>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- CONTACT                                      -->
+  <!-- ============================================ -->
+  <section class="contact-section">
+    <div class="contact-box">
+      <p class="contact-text editable">Right project, right conversation<span style="color:#F04E23">.</span></p>
+      <a href="mailto:cem@ct1.media" class="contact-email editable">cem@ct1.media</a>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- FOOTER                                       -->
+  <!-- ============================================ -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-logo editable">CT1</span>
+        <span class="editable">&copy; 2026 CT1 Media</span>
+      </div>
+      <div class="footer-right">
+        <span class="editable">All rights reserved</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var words = [
+        'Architect', 'Shoot', 'Produce', 'Deliver',
+        'Optimize', 'Adapt', 'Calibrate',
+        'Systematize', 'Render', 'Integrate',
+        'Configure', 'Execute', 'Refine',
+        'Construct', 'Deploy', 'Engineer',
+        'Align', 'Scale', 'Structure'
+      ];
+
+      var positions = [
+        { top: '0%',  left: '5%' },
+        { top: '8%',  left: '55%' },
+        { top: '18%', left: '20%' },
+        { top: '26%', left: '60%' },
+        { top: '35%', left: '0%' },
+        { top: '42%', left: '45%' },
+        { top: '52%', left: '10%' },
+        { top: '58%', left: '55%' },
+        { top: '68%', left: '25%' },
+        { top: '76%', left: '5%' },
+        { top: '72%', left: '60%' },
+        { top: '85%', left: '30%' },
+        { top: '90%', left: '55%' }
+      ];
+
+      var cloud = document.getElementById('wordCloud');
+      var slots = positions.length;
+      var spans = [];
+
+      for (var i = 0; i < slots; i++) {
+        var span = document.createElement('span');
+        span.className = 'wc-word';
+        span.style.top = positions[i].top;
+        span.style.left = positions[i].left;
+        span.textContent = words[i % words.length];
+        cloud.appendChild(span);
+        spans.push(span);
+      }
+
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+        }
+        return arr;
+      }
+
+      var visibleCount = 6;
+      var highlightIndex = 0;
+      var currentVisible = [];
+
+      function pickVisible() {
+        var indices = [];
+        for (var i = 0; i < slots; i++) indices.push(i);
+        shuffle(indices);
+        return indices.slice(0, visibleCount);
+      }
+
+      function cycle() {
+        spans.forEach(function(s) {
+          s.classList.remove('active', 'highlight');
+        });
+
+        currentVisible = pickVisible();
+        highlightIndex = currentVisible[Math.floor(Math.random() * currentVisible.length)];
+
+        currentVisible.forEach(function(idx) {
+          var w = words[Math.floor(Math.random() * words.length)];
+          spans[idx].textContent = w;
+          if (idx === highlightIndex) {
+            spans[idx].classList.add('highlight');
+          } else {
+            spans[idx].classList.add('active');
+          }
+        });
+      }
+
+      cycle();
+      setInterval(cycle, 3000);
+    })();
+  </script>
+
+</body>
+</html>

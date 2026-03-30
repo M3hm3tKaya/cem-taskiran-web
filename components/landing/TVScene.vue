@@ -2,6 +2,10 @@
 import * as THREE from 'three'
 import { gsap } from 'gsap'
 
+const props = defineProps<{
+  introDone?: boolean
+}>()
+
 const emit = defineEmits<{
   'transition-to-main': []
 }>()
@@ -17,6 +21,8 @@ let tvGroup: THREE.Group
 let wallGroup: THREE.Group
 let ambientLight: THREE.AmbientLight
 let backLight: THREE.PointLight
+let dirLight: THREE.DirectionalLight
+let frontFill: THREE.DirectionalLight
 let animFrame: number
 
 let targetRotY = 0
@@ -61,11 +67,11 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 // ── CanvasTexture: TV ön yüz + video ekran ──
 function createTVFrontTexture(): THREE.CanvasTexture {
   tvCanvas = document.createElement('canvas')
-  const W = 420, H = 480
+  const s = 2
+  const W = 420 * s, H = 480 * s
   tvCanvas.width = W
   tvCanvas.height = H
   tvCtx = tvCanvas.getContext('2d')!
-  const s = 1
 
   // Ekran koordinatlarını hesapla
   const bezelX = 32 * s, bezelY = 32 * s
@@ -82,12 +88,12 @@ function createTVFrontTexture(): THREE.CanvasTexture {
 
   // Video elementi
   tvVideo = document.createElement('video')
-  tvVideo.src = '/videos/tv-screen.mp4'
+  tvVideo.src = '/videos/CT_INTRO.mp4'
   tvVideo.loop = true
   tvVideo.muted = true
   tvVideo.playsInline = true
-  tvVideo.playbackRate = 0.7
-  tvVideo.play().catch(() => {})
+  tvVideo.playbackRate = 1.2
+  tvVideo.pause()
 
   // Statik kısımları çiz
   drawStaticParts()
@@ -95,7 +101,7 @@ function createTVFrontTexture(): THREE.CanvasTexture {
   tvTexture = new THREE.CanvasTexture(tvCanvas)
   tvTexture.minFilter = THREE.LinearFilter
   tvTexture.magFilter = THREE.LinearFilter
-  tvTexture.anisotropy = 4
+  tvTexture.anisotropy = 16
   tvTexture.colorSpace = THREE.SRGBColorSpace
   return tvTexture
 }
@@ -103,7 +109,7 @@ function createTVFrontTexture(): THREE.CanvasTexture {
 function drawStaticParts() {
   const ctx = tvCtx
   const W = tvCanvas.width, H = tvCanvas.height
-  const s = 1
+  const s = 2
 
   // Arka plan
   ctx.fillStyle = '#F0EDE8'
@@ -143,10 +149,14 @@ function updateScreenFrame() {
   if (frameCount % 3 !== 0) return // 60fps → 20fps texture güncelleme
   if (!tvCtx || !tvVideo || !tvTexture || tvVideo.readyState < 2) return
 
-  const { x, y, w, h } = screenBounds
+  const { x, y, w, h, r } = screenBounds
 
-  // Clip olmadan direkt çiz — daha hızlı
+  // Yuvarlatılmış köşelerle clip
+  tvCtx.save()
+  roundRect(tvCtx, x, y, w, h, r)
+  tvCtx.clip()
   tvCtx.drawImage(tvVideo, x, y, w, h)
+  tvCtx.restore()
   tvTexture.needsUpdate = true
 }
 
@@ -156,7 +166,7 @@ function setupLights() {
   scene.add(ambientLight)
 
   // Sol üst directional — gölgeler için
-  const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1.2)
+  dirLight = new THREE.DirectionalLight(0xFFFFFF, 1.2)
   dirLight.position.set(-4, 6, 5)
   dirLight.castShadow = true
   dirLight.shadow.mapSize.set(1024, 1024)
@@ -171,7 +181,7 @@ function setupLights() {
   scene.add(dirLight)
 
   // Ön dolgu — TV ön yüzü
-  const frontFill = new THREE.DirectionalLight(0xFFFFFF, 0.6)
+  frontFill = new THREE.DirectionalLight(0xFFFFFF, 0.6)
   frontFill.position.set(0, 2, 8)
   frontFill.castShadow = true
   frontFill.shadow.mapSize.set(512, 512)
@@ -649,32 +659,31 @@ function toggleDayNight() {
   isDayMode.value = !isDayMode.value
 
   // Day mode: orijinal ışıklandırmaya dön
-  const bgTarget = isDayMode.value ? new THREE.Color(0x9A9A9A) : new THREE.Color(0x1A1A1D)
-  const wallBack = isDayMode.value ? new THREE.Color(0x9A9A9A) : new THREE.Color(0x151515)
-  const wallFront = isDayMode.value ? new THREE.Color(0x929292) : new THREE.Color(0x121212)
+  // Day değerleri init ile birebir aynı olmalı
+  const bgTarget = isDayMode.value ? new THREE.Color(0x9A9A9A) : new THREE.Color(0x4A4A4D)
+  const wallBack = isDayMode.value ? new THREE.Color(0x9A9A9A) : new THREE.Color(0x424245)
+  const wallFront = isDayMode.value ? new THREE.Color(0x929292) : new THREE.Color(0x3E3E41)
 
   if (scene.background instanceof THREE.Color) {
     gsap.to(scene.background, { r: bgTarget.r, g: bgTarget.g, b: bgTarget.b, duration: 0.8 })
   }
 
-  // Her duvar mesh'ini güncelle (Basic veya Standard fark etmez)
+  // wallGroup: [0] backWall, [1] shelfTop, [2] frontWall — her biri ayrı renk
+  const shelfTarget = isDayMode.value ? new THREE.Color(0xD8D5D0) : new THREE.Color(0x444040)
+  const meshTargets = [wallBack, shelfTarget, wallFront]
+
   wallGroup.children.forEach((c, i) => {
     if (c instanceof THREE.Mesh && c.material && 'color' in c.material) {
-      const t = i === 0 ? wallBack : wallFront
+      const t = meshTargets[i] || wallFront
       gsap.to((c.material as any).color, { r: t.r, g: t.g, b: t.b, duration: 0.8 })
     }
   })
 
-  gsap.to(ambientLight, { intensity: isDayMode.value ? 0.8 : 0.1, duration: 0.8 })
-  gsap.to(backLight, { intensity: isDayMode.value ? 3.0 : 0.5, duration: 0.8 })
-
-  // Raf rengi
-  const shelfTarget = isDayMode.value ? new THREE.Color(0xD8D5D0) : new THREE.Color(0x181818)
-  wallGroup.children.forEach((c) => {
-    if (c instanceof THREE.Mesh && c.material instanceof THREE.MeshStandardMaterial) {
-      gsap.to(c.material.color, { r: shelfTarget.r, g: shelfTarget.g, b: shelfTarget.b, duration: 0.8 })
-    }
-  })
+  // Işık yoğunlukları — day değerleri setupLights() ile birebir aynı
+  gsap.to(ambientLight, { intensity: isDayMode.value ? 0.8 : 0.35, duration: 0.8 })
+  gsap.to(backLight, { intensity: isDayMode.value ? 3.0 : 1.3, duration: 0.8 })
+  gsap.to(dirLight, { intensity: isDayMode.value ? 1.2 : 0.55, duration: 0.8 })
+  gsap.to(frontFill, { intensity: isDayMode.value ? 0.6 : 0.3, duration: 0.8 })
 }
 
 // Label veya kanal tıklamasından switch + day/night birlikte
@@ -701,6 +710,14 @@ function onResize() {
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
+
+// Intro bitince 1sn sonra videoyu başlat
+watch(() => props.introDone, (done) => {
+  if (done && tvVideo) {
+    tvVideo.currentTime = 0.3
+    tvVideo.play().catch(() => {})
+  }
+})
 
 onMounted(() => {
   document.body.style.overflow = 'hidden'
@@ -732,14 +749,14 @@ onUnmounted(() => {
     <!-- Overlay'ler -->
     <div class="ov nav-ov">
       <ul>
-        <li><span class="b">&bull;</span> About us</li>
-        <li><span class="b">&bull;</span> Contacts</li>
-        <li><span class="b">&bull;</span> FAQ</li>
+        <li><span class="b">&bull;</span> Work</li>
+        <li><span class="b">&bull;</span> Studio</li>
+        <li><span class="b">&bull;</span> Contact</li>
       </ul>
     </div>
-    <div class="ov logo-ov"><span>HL</span></div>
+    <div class="ov logo-ov"><img src="/ct-logo-black.png" alt="CT1" class="logo-img" /></div>
     <div class="ov time-ov">{{ currentTime }}</div>
-    <div class="ov tag-ov">// Positioned at the axis of talent and content across film</div>
+    <div class="ov tag-ov">// Entertainment production backed by technical infrastructure</div>
     <div class="ov scroll-ov">Scroll Down &#x25A0;</div>
     <!-- Switch label — düğmeyi takip eder -->
     <div
@@ -801,13 +818,14 @@ onUnmounted(() => {
   top: 40px; left: 40px;
   ul { display: flex; flex-direction: column; gap: 8px; }
   li { cursor: pointer; transition: opacity 0.3s; &:hover { opacity: 0.6; } }
-  .b { margin-right: 6px; color: $text-gray; }
+  .b { margin-right: 6px; color: $accent; }
 }
-.logo-ov { top: 40px; left: 50%; transform: translateX(-50%); font-size: 24px; font-weight: 700; letter-spacing: 0.15em; }
-.time-ov { top: 40px; right: 40px; font-size: 13px; color: $text-gray; }
-.tag-ov { bottom: 40px; left: 40px; color: $text-gray; font-size: 11px; max-width: 400px; }
+.logo-ov { top: 40px; left: 50%; transform: translateX(-50%); }
+.logo-img { height: 67px; width: auto; }
+.time-ov { top: 40px; right: 40px; font-size: 13px; color: #000; }
+.tag-ov { bottom: 40px; left: 40px; color: #000; font-size: 11px; max-width: 400px; }
 .scroll-ov {
-  bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 11px; color: $text-gray;
+  bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #000;
   animation: pulse 1.5s ease-in-out infinite alternate;
   @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
 }

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HLE Ana Sayfa - Metin Onay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #0E0E10;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    /* ---- Grid Arka Plan (CSS) ---- */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(42, 42, 45, 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 42, 45, 0.6) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    /* ---- Duzenlenebilir isaretler ---- */
+    .editable {
+      outline: 1px dashed rgba(0, 212, 255, 0.3);
+      outline-offset: 4px;
+    }
+
+    /* ---- Navigasyon ---- */
+    .main-nav {
+      position: fixed;
+      top: 40px;
+      left: 40px;
+      z-index: 20;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .main-nav li { cursor: pointer; }
+    .main-nav .bullet { margin-right: 6px; color: #888; }
+
+    .main-logo {
+      position: fixed;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+    }
+
+    /* ---- Hero Bolumu ---- */
+    .hero-section {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 160px 60px 40px;
+    }
+
+    .hero-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex: 1;
+    }
+
+    .hero-left { flex: 1; max-width: 65%; }
+    .hero-right { flex-shrink: 0; padding-top: 40px; padding-right: 40px; }
+
+    /* Submit link */
+    .submit-link {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    /* Typewriter baslik */
+    .typewriter-heading {
+      font-weight: 700;
+      font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    .typewriter-heading .line { white-space: nowrap; }
+    .changing-word { color: #00D4FF; }
+    .cursor {
+      font-weight: 300;
+      margin-left: 2px;
+      animation: blink 530ms step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Aciklama */
+    .hero-description {
+      margin-top: 140px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .hero-description p { margin-bottom: 16px; }
+
+    /* Surec adimlari */
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: clamp(14px, 3vw, 28px);
+      letter-spacing: 0.03em;
+    }
+    .step-num { color: #888; font-size: clamp(13px, 2.8vw, 26px); }
+    .step-label { font-weight: 500; }
+    .step:nth-child(1) { margin-left: -14vw; }
+    .step:nth-child(2) { margin-left: -7vw; margin-top: 10vw; }
+    .step:nth-child(3) { margin-left: -5vw; margin-top: 8vw; }
+    .step:nth-child(4) { margin-left: -9vw; margin-top: 10vw; }
+
+    /* Alt bar */
+    .hero-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #888;
+      padding-top: 20px;
+      border-top: 1px solid #2A2A2D;
+    }
+    .bar-center { color: #fff; font-size: 12px; }
+
+    /* ---- Proje Listesi ---- */
+    .scrolling-section {
+      position: relative;
+      z-index: 10;
+      padding: 120px 0 80px;
+    }
+
+    .section-header {
+      padding: 0 60px;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    .section-title .outline {
+      -webkit-text-stroke: 1.5px #fff;
+      color: transparent;
+    }
+
+    .section-desc {
+      max-width: 700px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #888;
+    }
+
+    .cards-row {
+      display: flex;
+      gap: 24px;
+      padding: 0 60px;
+      overflow-x: auto;
+    }
+
+    .project-card {
+      flex-shrink: 0;
+      width: 300px;
+      height: 420px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .card-content {
+      padding: 24px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+      border-radius: 0 0 4px 4px;
+    }
+    .card-subtitle {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- Donen Disk Bolumu ---- */
+    .disk-section {
+      position: relative;
+      z-index: 10;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 60px;
+    }
+    .disk-text {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    /* ---- Contact ---- */
+    .contact-section {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      padding: 80px 60px 120px;
+    }
+    .contact-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 50px 80px;
+      max-width: 700px;
+      width: 100%;
+    }
+    .arrow-down { font-size: 20px; color: #888; }
+    .contact-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #888;
+      text-align: center;
+      max-width: 480px;
+    }
+    .contact-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      padding: 12px 36px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* ---- Footer ---- */
+    .site-footer {
+      position: relative;
+      z-index: 10;
+      padding: 40px 60px;
+      border-top: 1px solid #2A2A2D;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #888;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.1em;
+    }
+
+    /* ---- Bolum Ayirici ---- */
+    .section-divider {
+      padding: 0 60px;
+    }
+    .section-divider hr {
+      border: none;
+      border-top: 1px solid #2A2A2D;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 1024px) {
+      .hero-layout { flex-direction: column; }
+      .hero-left { max-width: 100%; }
+      .hero-right { align-self: flex-end; }
+    }
+
+    @media (max-width: 768px) {
+      .main-nav { top: 20px; left: 20px; }
+      .main-logo { top: 20px; }
+      .hero-section { padding: 100px 24px 24px; }
+      .typewriter-heading { font-size: 12vw; }
+      .typewriter-heading .line { white-space: normal; }
+      .typewriter-heading .changing-word { display: block; }
+      .hero-description { margin-top: 40px; font-size: 12px; }
+      .hero-bottom-bar { flex-direction: column; gap: 8px; text-align: center; }
+      .section-header { padding: 0 24px; }
+      .scrolling-section { padding: 60px 0 40px; }
+      .cards-row { gap: 16px; padding: 0 24px; }
+      .project-card { width: 240px; height: 340px; }
+      .disk-section { padding: 60px 24px; }
+      .contact-section { padding: 60px 24px 80px; }
+      .contact-box { padding: 36px 28px; }
+      .site-footer { padding: 30px 24px; }
+      .footer-content { flex-direction: column; gap: 12px; }
+      .step:nth-child(1) { margin-left: -20px; }
+      .step:nth-child(2) { margin-left: 10px; margin-top: 40px; }
+      .step:nth-child(3) { margin-left: -10px; margin-top: 40px; }
+      .step:nth-child(4) { margin-left: 20px; margin-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Grid Arka Plan -->
+  <div class="grid-bg"></div>
+
+  <!-- Navigasyon -->
+  <ul class="main-nav">
+    <li class="editable"><span class="bullet">&bull;</span> About us</li>
+    <li class="editable"><span class="bullet">&bull;</span> Contacts</li>
+    <li class="editable"><span class="bullet">&bull;</span> FAQ</li>
+  </ul>
+  <div class="main-logo editable">HL</div>
+
+  <!-- ============================================ -->
+  <!-- HERO BOLUMU                                  -->
+  <!-- ============================================ -->
+  <section class="hero-section">
+    <div class="hero-layout">
+
+      <!-- Sol: Baslik + Aciklama -->
+      <div class="hero-left">
+        <div class="submit-link editable">&bull; Submit Your Pitch</div>
+
+        <h1 class="typewriter-heading">
+          <!--
+            ANA BASLIK SATIRLARI
+            Her .line bir satir. Degistirmek icin metni duzenleyin.
+          -->
+          <div class="line editable">Positioned at the axis</div>
+          <div class="line editable">of talent and content</div>
+          <div class="line">
+            <span class="editable">across </span>
+            <span class="changing-word">film<span class="cursor">|</span></span>
+          </div>
+          <!-- Degisen kelimeler: film / television / music -->
+        </h1>
+
+        <div class="hero-description">
+          <!--
+            ACIKLAMA PARAGRAFLARI
+            Metinleri serbestce duzenleyebilirsiniz.
+          -->
+          <p class="editable">
+            HLE creates opportunities for the storytellers, trendsetters,
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;and creatives of all types who are looking to get their message amplified.
+          </p>
+          <p class="editable">
+            By helping shape original media that appeals to the industry's
+            <br>&nbsp;&nbsp;mandates and long-term visions, HLE is able to align creator with buyer.
+          </p>
+        </div>
+      </div>
+
+      <!-- Sag: Surec Adimlari -->
+      <div class="hero-right">
+        <div class="process-steps">
+          <!--
+            SUREC ADIMLARI
+            Numara ve etiketleri degistirebilirsiniz.
+          -->
+          <div class="step editable">
+            <span class="step-num">[1]</span>
+            <span class="step-label">Develop</span>
+          </div>
+          <div class="step editable">
+            <span class="step-num">[2]</span>
+            <span class="step-label">Submit</span>
+          </div>
+          <div class="step editable">
+            <span class="step-num">[3]</span>
+            <span class="step-label">Creative Review</span>
+          </div>
+          <div class="step editable">
+            <span class="step-num">[4]</span>
+            <span class="step-label">Pitch</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Alt Bar -->
+    <div class="hero-bottom-bar">
+      <span class="bar-left editable">a place</span>
+      <span class="bar-center editable">to pitch your ideas to creatives and producers</span>
+      <span class="bar-right editable">Scroll Down</span>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- PROJE LISTESI                                -->
+  <!-- ============================================ -->
+  <section class="scrolling-section">
+    <div class="section-header">
+      <h2 class="section-title editable"><span class="outline">Our</span> projects</h2>
+      <p class="section-desc editable">
+        HLE creates opportunities for the storytellers, trendsetters,
+        and creatives of all types who are looking to get their message amplified.
+        By helping shape original media that appeals to the industry's
+        mandates and long-term visions.
+      </p>
+    </div>
+
+    <!--
+      PROJE KARTLARI
+      Her kartın baslik, alt baslik ve arka plan rengini degistirebilirsiniz.
+    -->
+    <div class="cards-row">
+      <div class="project-card editable" style="background-color: #4A1525;">
+        <div class="card-content">
+          <span class="card-subtitle">Series Format</span>
+          <h3 class="card-title">ACROSS THE BRIDGE</h3>
+        </div>
+      </div>
+      <div class="project-card editable" style="background-color: #152545;">
+        <div class="card-content">
+          <span class="card-subtitle">Proprietary Notice</span>
+          <h3 class="card-title">HLE</h3>
+        </div>
+      </div>
+      <div class="project-card editable" style="background-color: #1A3525;">
+        <div class="card-content">
+          <span class="card-subtitle">Writers Guild</span>
+          <h3 class="card-title">$VILLE</h3>
+        </div>
+      </div>
+      <div class="project-card editable" style="background-color: #2A1545;">
+        <div class="card-content">
+          <span class="card-subtitle">Written By</span>
+          <h3 class="card-title">DREAM SCREEN</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- BUYUK YAZI BOLUMU (Donen Disk)               -->
+  <!-- ============================================ -->
+  <section class="disk-section">
+    <p class="disk-text editable">Helping people get their idea sold</p>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- ILETISIM                                     -->
+  <!-- ============================================ -->
+  <section class="contact-section">
+    <div class="contact-box">
+      <div class="arrow-down">&#8595;</div>
+      <p class="contact-text editable">
+        Entertainment company helping people get their idea sold
+        to networks and production companies through our contacts in NYC and LA
+      </p>
+      <a href="#" class="contact-btn editable">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- FOOTER                                       -->
+  <!-- ============================================ -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-logo editable">HL</span>
+        <span class="editable">&copy; 2026 HLE Entertainment</span>
+      </div>
+      <div class="footer-right">
+        <span class="editable">All rights reserved</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -34,7 +34,7 @@ onUnmounted(() => {
   gsap.ticker.remove(updateRotation)
 })
 
-const paragraphText = `Helping people get their idea sold`
+const paragraphText = `A production studio that treats technology as method, not marketing.`
 </script>
 
 <template>

@@ -4,23 +4,12 @@
 <template>
   <section class="hero-section">
     <div class="hero-layout">
-      <!-- Sol taraf: Typewriter + açıklama -->
+      <!-- Sol taraf: Başlık + açıklama -->
       <div class="hero-left">
         <MainTypewriterText />
-
-        <div class="hero-description">
-          <p>
-            HLE creates opportunities for the storytellers, trendsetters,
-            <br />&nbsp;&nbsp;&nbsp;&nbsp;and creatives of all types who are looking to get their message amplified.
-          </p>
-          <p>
-            By helping shape original media that appeals to the industry's
-            <br />&nbsp;&nbsp;mandates and long-term visions, HLE is able to align creator with buyer.
-          </p>
-        </div>
       </div>
 
-      <!-- Sağ taraf: Süreç adımları -->
+      <!-- Sağ taraf: Kelime bulutu -->
       <div class="hero-right">
         <MainProcessSteps />
       </div>
@@ -28,9 +17,9 @@
 
     <!-- Alt bar -->
     <div class="hero-bottom-bar">
-      <span class="bar-left">a place</span>
-      <span class="bar-center">to pitch your ideas to creatives and producers</span>
-      <span class="bar-right">Scroll Down</span>
+      <span class="bar-left">Film &middot; Advertising &middot; Digital</span>
+      <span class="bar-center">Production infrastructure, not just production</span>
+      <span class="bar-right">&darr;</span>
     </div>
   </section>
 </template>
@@ -46,7 +35,7 @@
   z-index: $z-main;
 
   @media (max-width: $breakpoint-mobile) {
-    padding: 80px 24px 24px;
+    padding: 100px 24px 24px;
   }
 }
 
@@ -75,26 +64,18 @@
   flex-shrink: 0;
   padding-top: 40px;
   padding-right: 40px;
+  display: flex;
+  align-items: center;
+  min-height: 320px;
 
   @media (max-width: $breakpoint-tablet) {
     align-self: flex-end;
-  }
-}
-
-.hero-description {
-  margin-top: 140px;
-  font-size: 13px;
-  line-height: 1.7;
-  color: $text-white;
-  font-family: $font-mono;
-
-  p {
-    margin-bottom: 16px;
+    min-height: 240px;
   }
 
   @media (max-width: $breakpoint-mobile) {
-    margin-top: 40px;
-    font-size: 12px;
+    padding-right: 0;
+    min-height: 200px;
   }
 }
 

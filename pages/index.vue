@@ -3,10 +3,11 @@ const showIntro = ref(true)
 // TV sahnesi baştan render edilir — intro'nun arkasında hazır bekler
 const showTVScene = ref(true)
 const showMainContent = ref(false)
+const introDone = ref(false)
 
 function onIntroComplete() {
   showIntro.value = false
-  // Scroll kilitli kalır — TV sahnesi wheel ile zoom kontrol eder
+  introDone.value = true
 }
 
 function onTransitionToMain() {
@@ -20,7 +21,7 @@ function onTransitionToMain() {
 <template>
   <div id="app">
     <!-- TV sahnesi arkada hazır bekler (z-index düşük) -->
-    <LandingTVScene v-if="showTVScene" @transition-to-main="onTransitionToMain" />
+    <LandingTVScene v-if="showTVScene" :intro-done="introDone" @transition-to-main="onTransitionToMain" />
 
     <!-- Intro perdesi üstte durur, kalkarken TV görünür -->
     <IntroScreen v-if="showIntro" @intro-complete="onIntroComplete" />

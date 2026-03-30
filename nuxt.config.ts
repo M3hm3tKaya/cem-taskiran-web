@@ -13,13 +13,13 @@ export default defineNuxtConfig({
   // Uygulama head ayarları
   app: {
     head: {
-      title: 'HLE — Entertainment',
+      title: 'CT1 Media — Production Infrastructure',
       htmlAttrs: { lang: 'en' },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Positioned at the axis of talent and content across film, television & music.' },
-        { name: 'theme-color', content: '#1A1A1D' },
+        { name: 'description', content: 'Entertainment production backed by technical infrastructure. Built for precision, speed, and platform intelligence.' },
+        { name: 'theme-color', content: '#0E0E10' },
       ],
       link: [
         // IBM Plex Mono — Google Fonts preconnect + load

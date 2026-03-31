@@ -1,9 +1,10 @@
 <script setup lang="ts">
-// CT1 Media — Marka logo gridi (ScrollingList yerine)
-// Placeholder logolar — müşteri gerçek logoları gönderince değiştirilecek
+// CT1 Media — Marka logo gridi
 const brands = [
-  'Brand Logo', 'Brand Logo', 'Brand Logo', 'Brand Logo',
-  'Brand Logo', 'Brand Logo', 'Brand Logo', 'Brand Logo',
+  { name: 'Aselsan', src: '/brands/aselsan.png', invert: false, h: '40px' },
+  { name: 'ASUS', src: '/brands/asus.png', invert: false, h: '40px' },
+  { name: 'Puma', src: '/brands/puma.png', invert: true, h: '50px' },
+  { name: 'TBB', src: '/brands/tbb.png', invert: false, h: '50px' },
 ]
 </script>
 
@@ -15,7 +16,13 @@ const brands = [
 
     <div class="logo-grid">
       <div v-for="(brand, i) in brands" :key="i" class="logo-item">
-        {{ brand }}
+        <img
+          :src="brand.src"
+          :alt="brand.name"
+          class="brand-logo"
+          :class="{ 'invert': brand.invert }"
+          :style="{ height: brand.h }"
+/>
       </div>
     </div>
   </section>
@@ -61,6 +68,7 @@ const brands = [
   gap: 40px 60px;
   padding: 0 60px;
   align-items: center;
+  justify-content: center;
 
   @media (max-width: $breakpoint-mobile) {
     gap: 20px 30px;
@@ -69,19 +77,28 @@ const brands = [
 }
 
 .logo-item {
-  font-family: $font-mono;
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 16px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
-  transition: border-color 0.3s;
+  padding: 20px 32px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  transition: background 0.3s, border-color 0.3s;
 
   &:hover {
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.brand-logo {
+  width: auto;
+  object-fit: contain;
+
+  &.invert {
+    filter: invert(1);
   }
 }
 </style>

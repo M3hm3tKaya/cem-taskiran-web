@@ -62,7 +62,7 @@ const brands = [
   flex-wrap: wrap;
   gap: 40px 60px;
   padding: 0 60px;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 
   @media (max-width: $breakpoint-mobile) {
@@ -88,10 +88,6 @@ const brands = [
     height: 35px !important;
     margin-bottom: 0 !important;
   }
-}
-
-.logo-grid {
-  align-items: flex-end;
 }
 
 .logo-grid {

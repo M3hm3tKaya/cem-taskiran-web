@@ -108,12 +108,13 @@ function createWalls() {
 // ── Video hazırla ──
 function setupVideo() {
   tvVideo = document.createElement('video')
-  tvVideo.src = '/videos/CT_INTRO.mp4'
+  tvVideo.src = '/videos/tv-screen.mp4'
   tvVideo.loop = true
   tvVideo.muted = true
   tvVideo.playsInline = true
-  tvVideo.playbackRate = 1.2
-  tvVideo.pause()
+  tvVideo.playbackRate = 1.0
+  tvVideo.autoplay = true
+  tvVideo.play().catch(() => {})
 
   videoTexture = new THREE.VideoTexture(tvVideo)
   videoTexture.minFilter = THREE.LinearFilter
@@ -137,15 +138,30 @@ function loadModel() {
 
         if (child.name === 'screen') {
           screenMesh = child
-          // Video Y ekseninde ters — UV'yi flip et
           const uv = child.geometry.attributes.uv
+          // Video 1.78 ratio, ekran ~1.30 ratio
+          // Dikeyde tam göster, yatayda ortadan kırp
+          // UV'ler standart 0-1 değil → önce normalize et
+          let minU = Infinity, maxU = -Infinity, minV = Infinity, maxV = -Infinity
           for (let j = 0; j < uv.count; j++) {
-            uv.setY(j, 1 - uv.getY(j))
+            const u = uv.getX(j), v = uv.getY(j)
+            if (u < minU) minU = u; if (u > maxU) maxU = u
+            if (v < minV) minV = v; if (v > maxV) maxV = v
+          }
+          const rangeU = maxU - minU
+          const rangeV = maxV - minV
+
+          for (let j = 0; j < uv.count; j++) {
+            // 0-1 aralığına normalize et
+            const normU = (uv.getX(j) - minU) / rangeU
+            const normV = 1 - (uv.getY(j) - minV) / rangeV // Y flip
+            uv.setXY(j, normU, normV)
           }
           uv.needsUpdate = true
           child.material = new THREE.MeshBasicMaterial({
             map: videoTexture,
             color: 0xffffff,
+            toneMapped: false,
           })
         }
       }
@@ -258,10 +274,11 @@ function animate() {
   const lookZ = p * screenWorldZ
   const camY = 0.8 + p * (screenWorldY - 0.8)
 
-  camera.position.x = Math.sin(currentRotY) * camDist
+  const screenOffsetX = -0.25 // %7 sola kaydir
+  camera.position.x = Math.sin(currentRotY) * camDist + p * screenOffsetX
   camera.position.z = Math.cos(currentRotY) * camDist + p * screenWorldZ
   camera.position.y = camY
-  camera.lookAt(0, lookY, lookZ)
+  camera.lookAt(p * screenOffsetX, lookY, lookZ)
 
   // Video texture güncelle
   if (videoTexture && tvVideo.readyState >= 2) {
@@ -280,26 +297,24 @@ function triggerTransition() {
 
   showLoadingVideo.value = true
 
-  const doTransition = () => {
-    gsap.to(containerRef.value, {
-      opacity: 0, duration: 0.6, ease: 'power2.inOut',
-      onComplete: () => emit('transition-to-main'),
-    })
-  }
-
   nextTick(() => {
     const loadingVid = document.querySelector('.loading-video') as HTMLVideoElement
     if (loadingVid) {
       loadingVid.currentTime = 0
       loadingVid.play().catch(() => {})
-      loadingVid.ontimeupdate = () => {
-        if (loadingVid.duration - loadingVid.currentTime <= 0.8) {
-          loadingVid.ontimeupdate = null
-          doTransition()
-        }
-      }
     }
-    setTimeout(doTransition, 4000)
+    // 2.5sn sonra fade out — video overlay'e uygula (video altta oynamaya devam eder)
+    setTimeout(() => {
+      const fadeOverlay = document.querySelector('.fade-overlay') as HTMLElement
+      if (fadeOverlay) {
+        gsap.to(fadeOverlay, {
+          opacity: 1, duration: 0.5, ease: 'power2.in',
+          onComplete: () => emit('transition-to-main'),
+        })
+      } else {
+        emit('transition-to-main')
+      }
+    }, 1500)
   })
 }
 
@@ -318,12 +333,6 @@ function onResize() {
 }
 
 // Intro bitince videoyu başlat
-watch(() => props.introDone, (done) => {
-  if (done && tvVideo) {
-    tvVideo.currentTime = 0.3
-    tvVideo.play().catch(() => {})
-  }
-})
 
 onMounted(() => {
   document.body.style.overflow = 'hidden'
@@ -364,14 +373,18 @@ onUnmounted(() => {
     <div class="ov scroll-ov">Scroll Down &#x25A0;</div>
 
 
-    <!-- Loading video overlay -->
+    <!-- Loading video overlay — v-show ile DOM'da hazır bekler -->
     <video
-      v-if="showLoadingVideo"
+      v-show="showLoadingVideo"
       class="loading-video"
-      src="/videos/loading-screen.mp4"
+      src="/videos/transition.mp4"
       muted
       playsinline
+      preload="auto"
     />
+
+    <!-- Fade out overlay — video üstünde siyah ekran -->
+    <div v-if="showLoadingVideo" class="fade-overlay" />
   </div>
 </template>
 
@@ -392,6 +405,17 @@ onUnmounted(() => {
   height: 100vh;
   object-fit: cover;
   z-index: 100;
+}
+
+.fade-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #0E0E10;
+  opacity: 0;
+  z-index: 101;
+  pointer-events: none;
 }
 
 .ov {

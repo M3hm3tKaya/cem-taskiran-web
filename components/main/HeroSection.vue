@@ -14,9 +14,7 @@
 
     <!-- Alt bar -->
     <div class="hero-bottom-bar">
-      <span class="bar-left">Content &middot; Commercial &middot; Film &middot; Systems</span>
-      <span class="bar-center">Production infrastructure, not just production</span>
-      <span class="bar-right">&darr;</span>
+      <span class="bar-center">Content &middot; Commercial &middot; Film &middot; Systems</span>
     </div>
   </section>
 </template>
@@ -55,24 +53,15 @@
 
 .hero-bottom-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   font-family: $font-heading;
-  color: $text-gray;
   padding-top: 20px;
   border-top: 1px solid $grid-color;
-
-  @media (max-width: $breakpoint-mobile) {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
 }
 
 .bar-center {
   color: $text-white;
-  font-size: 12px;
-  font-family: $font-heading;
 }
 </style>

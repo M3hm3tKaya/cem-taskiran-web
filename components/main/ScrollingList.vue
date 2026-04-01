@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // CT1 Media — Marka logo gridi
+// Yükseklikler: her logonun metin kısmı Aselsan'ın "n" yüksekliğine hizalı
 const brands = [
-  { name: 'Aselsan', src: '/brands/aselsan.png', invert: false, h: '40px' },
-  { name: 'ASUS', src: '/brands/asus.png', invert: false, h: '40px' },
-  { name: 'Puma', src: '/brands/puma.png', invert: true, h: '50px' },
-  { name: 'TBB', src: '/brands/tbb.png', invert: false, h: '50px' },
+  { name: 'Aselsan', src: '/brands/aselsan.png', h: '42px', offset: '0px', debug: false },
+  { name: 'ASUS', src: '/brands/asus.png', h: '29px', offset: '0px', debug: false },
+  { name: 'Puma', src: '/brands/puma.png', h: '63px', offset: '0px', debug: false },
+  { name: 'TBB', src: '/brands/tbb.png', h: '46px', offset: '-8px', debug: false },
 ]
 </script>
 
@@ -15,14 +16,8 @@ const brands = [
     </div>
 
     <div class="logo-grid">
-      <div v-for="(brand, i) in brands" :key="i" class="logo-item">
-        <img
-          :src="brand.src"
-          :alt="brand.name"
-          class="brand-logo"
-          :class="{ 'invert': brand.invert }"
-          :style="{ height: brand.h }"
-/>
+      <div v-for="(brand, i) in brands" :key="i" class="logo-item" :class="{ 'debug-guides': brand.debug }">
+        <img :src="brand.src" :alt="brand.name" class="brand-logo" :style="{ height: brand.h, marginBottom: brand.offset }" />
       </div>
     </div>
   </section>
@@ -77,28 +72,26 @@ const brands = [
 }
 
 .logo-item {
-  padding: 20px 32px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80px;
-  transition: background 0.3s, border-color 0.3s;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
 }
 
 .brand-logo {
   width: auto;
   object-fit: contain;
+  filter: brightness(0) invert(1);
 
-  &.invert {
-    filter: invert(1);
+  @media (max-width: $breakpoint-mobile) {
+    transform: scale(0.75);
   }
+}
+
+.logo-grid {
+  align-items: flex-end;
+}
+
+.logo-grid {
+  align-items: flex-end;
 }
 </style>

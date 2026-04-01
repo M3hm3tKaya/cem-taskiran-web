@@ -66,8 +66,10 @@ const brands = [
   justify-content: center;
 
   @media (max-width: $breakpoint-mobile) {
-    gap: 20px 30px;
+    flex-direction: column;
+    gap: 30px;
     padding: 0 24px;
+    align-items: center;
   }
 }
 
@@ -83,7 +85,8 @@ const brands = [
   filter: brightness(0) invert(1);
 
   @media (max-width: $breakpoint-mobile) {
-    transform: scale(0.75);
+    height: 35px !important;
+    margin-bottom: 0 !important;
   }
 }
 

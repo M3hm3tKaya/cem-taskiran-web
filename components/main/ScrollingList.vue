@@ -90,10 +90,6 @@ const brands = [
   object-fit: contain;
   filter: brightness(0) invert(1);
 
-  @media (max-width: $breakpoint-mobile) {
-    height: 35px !important;
-    margin-bottom: 0 !important;
-  }
 }
 
 .logo-grid {

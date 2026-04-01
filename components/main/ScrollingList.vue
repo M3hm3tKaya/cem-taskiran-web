@@ -70,6 +70,8 @@ const brands = [
     gap: 30px;
     padding: 0 24px;
     align-items: center;
+    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -77,6 +79,10 @@ const brands = [
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+  }
 }
 
 .brand-logo {

@@ -303,7 +303,7 @@ function triggerTransition() {
       loadingVid.currentTime = 0
       loadingVid.play().catch(() => {})
     }
-    // 2.5sn sonra fade out — video overlay'e uygula (video altta oynamaya devam eder)
+    // 1sn sonra fade out başlasın (video 1.5sn)
     setTimeout(() => {
       const fadeOverlay = document.querySelector('.fade-overlay') as HTMLElement
       if (fadeOverlay) {
@@ -314,7 +314,7 @@ function triggerTransition() {
       } else {
         emit('transition-to-main')
       }
-    }, 1500)
+    }, 1000)
   })
 }
 

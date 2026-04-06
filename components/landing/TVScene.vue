@@ -109,12 +109,20 @@ function createWalls() {
 function setupVideo() {
   tvVideo = document.createElement('video')
   tvVideo.src = '/videos/tv-screen.mp4'
-  tvVideo.loop = true
+  tvVideo.loop = false
   tvVideo.muted = true
   tvVideo.playsInline = true
   tvVideo.playbackRate = 1.0
   tvVideo.autoplay = true
   tvVideo.play().catch(() => {})
+
+  // Video bitince 2sn bekle, sonra tekrar oynat (test amaçlı)
+  tvVideo.addEventListener('ended', () => {
+    setTimeout(() => {
+      tvVideo.currentTime = 0
+      tvVideo.play().catch(() => {})
+    }, 500)
+  })
 
   videoTexture = new THREE.VideoTexture(tvVideo)
   videoTexture.minFilter = THREE.LinearFilter
